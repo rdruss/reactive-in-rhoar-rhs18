@@ -1,0 +1,88 @@
+<html>
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>My Products v3 - Web client</h1>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody id="products">
+
+            </tbody>
+        </table>
+    </div>
+
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input class="form-control" id="name" type="text" placeholder="product name">
+        </div>
+        <button id="add" type="button" class="btn btn-primary">Add</button>
+    </form>
+</div>
+
+
+<script src="libs/jsonpipe.js"></script>
+<script src="libs/jquery.js"></script>
+<script src="libs/bootstrap.js"></script>
+
+<script>
+    $(document).ready(function () {
+        retrieve();
+
+        $("#add").click(function (e) {
+            var obj = {
+                name: $("#name").val()
+            };
+            $.ajax({
+                type: "POST",
+                url: "/products",
+                data: JSON.stringify(obj),
+                contentType: 'application/json; charset=utf-8',
+                success: function (x) {
+                    retrieve();
+                }
+            });
+            e.preventDefault();
+        });
+    });
+
+
+    function retrieve() {
+        $("tr").remove();
+        console.log("Retrieving...");
+        jsonpipe.flow('/products', {
+            "success": function (data) {
+                console.log("Retrieved", data);
+                $("#products")
+                    .append("<tr><td>" + data.id + "</td>" +
+                        "<td>" + data.name + "</td>" +
+                        "<td>" + data.price + "</td></tr>");
+            },
+            "error": function (errorMsg) {
+                // Something wrong happened, check the error message
+            },
+            "complete": function (statusText) {
+                console.log("Done")
+            },
+            "timeout": 3000
+        });
+    }
+
+</script>
+</body>
+</html>

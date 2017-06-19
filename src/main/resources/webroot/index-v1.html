@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>My Products v1 - In memory</h1>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody id="products">
+
+            </tbody>
+        </table>
+    </div>
+
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input class="form-control" id="name" type="text" placeholder="product name">
+            <label for="id">Id</label>
+            <input class="form-control" id="id" type="number">
+        </div>
+        <button id="add" type="button" class="btn btn-primary">Add</button>
+    </form>
+</div>
+
+
+<script src="libs/jquery.js"></script>
+<script src="libs/bootstrap.js"></script>
+
+<script>
+    $(document).ready(function () {
+        retrieve();
+
+        $("#add").click(function (e) {
+
+            var obj = {
+                name: $("#name").val(),
+                id: parseInt($("#id").val())
+            };
+            console.log("Sending ", obj);
+            $.ajax({
+                type: "POST",
+                url: "/products",
+                data: JSON.stringify(obj),
+                contentType: 'application/json; charset=utf-8',
+                success: function (x) {
+                    console.log("sent !");
+                    retrieve();
+                }
+            });
+            e.preventDefault();
+        });
+    });
+
+
+    function retrieve() {
+        $.getJSON(
+            "/products",
+            function (data) {
+                $("tr").remove();
+                $.each(data, function (key, val) {
+                    $("#products")
+                        .append("<tr><td>" + val.id + "</td>" +
+                            "<td>" + val.name + "</td>" +
+                            "<td>" + val.price + "</td></tr>");
+                });
+            }
+        )
+    }
+
+</script>
+</body>
+</html>
