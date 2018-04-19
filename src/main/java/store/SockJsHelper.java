@@ -2,7 +2,7 @@ package store;
 
 import io.vertx.core.Handler;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
-import io.vertx.ext.web.handler.sockjs.PermittedOptions;
+import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.ext.web.RoutingContext;
 import io.vertx.rxjava.ext.web.handler.sockjs.SockJSHandler;
